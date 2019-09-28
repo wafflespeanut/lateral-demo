@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import App from './App';
 import ApiClient from '../api/client';
 import Recommendation from '../api/models/recommendation';
@@ -34,10 +34,40 @@ class TestApp extends App {
   client: ApiClient = new TestApiClient();
 }
 
+/** Hack for rushing async renders: See https://github.com/facebook/jest/issues/2157#issuecomment-279171856 */
+function flushPromises(): Promise<{}> {
+  return new Promise(resolve => setImmediate(resolve));
+}
+
 it('sets server time on mount', () => {
   const app = shallow(<TestApp />);
   const instance = app.instance() as any;
   const spy = jest.spyOn(instance, 'setServerTime');
   instance.componentDidMount();
   expect(spy).toHaveBeenCalled();
+});
+
+it('enables/disables submit button based on input', () => {
+  const app = shallow(<TestApp />);
+  let button = <button disabled={true}>Suggest</button>
+  expect(app.contains(button)).toBeTruthy();
+  app.setState({ text: 'foobar' });
+  button = <button disabled={false}>Suggest</button>
+  expect(app.contains(button)).toBeTruthy();
+});
+
+it('fetches recommendations on submit', () => {
+  const app = mount(<TestApp />);
+  const instance = app.instance() as any;
+  const spy = jest.spyOn(instance, 'handleSubmit');
+  app.setState({ text: 'foobar' }); // change event
+  app.find('form').simulate('submit');
+  expect(spy).toHaveBeenCalled();
+
+  return flushPromises().then(() => {
+    const results = (app.state() as any).results;
+    expect(results).toHaveLength(1);
+    expect(results[0].summary).toEqual('Hello, world!');
+    expect(results[0].title).toEqual('foobar');
+  });
 });

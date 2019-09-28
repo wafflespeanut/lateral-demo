@@ -70,17 +70,20 @@ export default class App extends React.Component {
    *
    * @param e Form submit event.
    */
-  private handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  private handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault();
     this.setState({ disabled: true });
+    this.client.getSimilarNews(this.state.text).then(results => {
+      this.setState({ results });
+    });
   }
 
   /**
    * Updates the state using the user's text input.
    *
-   * @param e Input element value change event.
+   * @param evt Input element value change event.
    */
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ text: e.target.value });
+  private handleChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ text: evt.target.value });
   }
 }
