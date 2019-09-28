@@ -1,14 +1,30 @@
+from client import LateralApi
 from datetime import datetime
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import Application
 
-from server import endpoints
+import endpoints
 import json
 
 
+class TestApiClient(LateralApi):
+    '''Test client wrapper for Lateral API.'''
+
+    def __init__(self):
+        self.similarNews = [{
+            'foo': 'bar'
+        }]
+
+    async def getRecommendedNews(self, similarToText):
+        return self.similarNews
+
+
 class TestHandlers(AsyncHTTPTestCase):
+    '''Tests associated with endpoints.'''
+
     def get_app(self):
-        return Application(handlers=endpoints.getHandlers())
+        client = TestApiClient()
+        return Application(handlers=endpoints.getHandlers(apiClient=client))
 
     def test_root_handler_current_time(self):
         '''
@@ -28,3 +44,23 @@ class TestHandlers(AsyncHTTPTestCase):
         # Replace seconds so that we can compare the rest of the object
         self.assertEqual(now.replace(second=0, microsecond=0),
                          then.replace(second=0))
+
+    def test_similar_news_empty_body(self):
+        '''
+        If the recommendations handler gets an empty text, then it should
+        respond with 400 status code.
+        '''
+        response = self.fetch('/recommendations', method='POST', body='')
+        self.assertEqual(response.code, 400)
+
+    def test_similar_news(self):
+        '''
+        Expects the recommendations handler to proxy JSON object
+        from TestApiClient.
+        '''
+
+        response = self.fetch('/recommendations', method='POST', body='foobar')
+        self.assertEqual(response.code, 200)
+        body = response.body.decode('utf-8')
+        obj = json.loads(body)
+        self.assertEqual(obj, [{'foo': 'bar'}])

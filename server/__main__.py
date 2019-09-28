@@ -1,15 +1,22 @@
+from client import LateralApiClient
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 from tornado.web import Application
 
 import endpoints
 import os
+import sys
 
 DEFAULT_PORT = 8080
 
 
 if __name__ == "__main__":
-    app = Application(handlers=endpoints.getHandlers())
+    apiKey = os.environ.get('API_KEY')
+    if apiKey is None:
+        sys.exit('API_KEY must be set as an environment variable.')
+    client = LateralApiClient(apiKey=apiKey)
+
+    app = Application(handlers=endpoints.getHandlers(apiClient=client))
     server = HTTPServer(app)
     port = DEFAULT_PORT
 

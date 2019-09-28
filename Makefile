@@ -7,4 +7,4 @@ build: fmt
 
 test: build
 	flake8 .
-	python -m unittest discover
+	cd server && python -m unittest discover
