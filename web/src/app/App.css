@@ -1,0 +1,13 @@
+.App {
+  text-align: center;
+}
+
+.formInput {
+  margin: 40px 0;
+}
+
+.App-result {
+  padding-bottom: 3px;
+  text-align: left;
+  margin: 0 50px;
+}
