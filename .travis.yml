@@ -2,8 +2,8 @@ language: python
 python: '3.7'
 install:
 - pip install pipenv
-- pipenv sync
+- pipenv install --dev
 script:
-- pipenv run autopep8 -r . --diff --exit-code
-- pipenv run flake8 .
-- cd server && pipenv run python -m unittest discover
+- autopep8 -r . --diff --exit-code
+- flake8 .
+- cd server && python -m unittest discover
