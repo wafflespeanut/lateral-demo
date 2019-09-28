@@ -4,6 +4,6 @@ install:
 - pip install pipenv
 - pipenv sync
 script:
-- autopep8 -r . --diff --exit-code
-- flake8 .
-- cd server && python -m unittest discover
+- pipenv run autopep8 -r . --diff --exit-code
+- pipenv run flake8 .
+- cd server && pipenv run python -m unittest discover
