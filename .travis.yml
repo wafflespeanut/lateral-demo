@@ -1,9 +1,22 @@
-language: python
-python: '3.7'
-install:
-- pip install pipenv
-- pipenv install --dev
-script:
-- autopep8 -r . --diff --exit-code
-- flake8 .
-- cd server && python -m unittest discover
+
+matrix:
+  include:
+  - language: python
+    python: '3.7'
+    before_script:
+    - pip install pipenv
+    - pipenv install --dev
+    - cd server
+    script:
+    - autopep8 -r . --diff --exit-code
+    - flake8 . --exclude node_modules
+    - python -m unittest discover
+  - language: node_js
+    node_js: "12"
+    before_script:
+    - cd web
+    - npm install
+    script:
+    - npm run lint
+    - CI=true npm run test
+    - npm run build
