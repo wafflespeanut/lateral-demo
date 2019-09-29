@@ -65,9 +65,10 @@ it('fetches recommendations on submit', () => {
   expect(spy).toHaveBeenCalled();
 
   return flushPromises().then(() => {
-    const results = (app.state() as any).results;
-    expect(results).toHaveLength(1);
-    expect(results[0].summary).toEqual('Hello, world!');
-    expect(results[0].title).toEqual('foobar');
+    const state = app.state() as any;
+    expect(state.disabled).toBeFalsy();
+    expect(state.results).toHaveLength(1);
+    expect(state.results[0].summary).toEqual('Hello, world!');
+    expect(state.results[0].title).toEqual('foobar');
   });
 });

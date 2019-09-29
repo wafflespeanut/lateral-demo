@@ -74,7 +74,7 @@ export default class App extends React.Component {
     evt.preventDefault();
     this.setState({ disabled: true });
     this.client.getSimilarNews(this.state.text).then(results => {
-      this.setState({ results });
+      this.setState({ results, disabled: false });
     });
   }
 
