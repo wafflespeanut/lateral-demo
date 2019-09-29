@@ -31,11 +31,11 @@ fi
 
 # Sync repo with Github.
 if [ -d "$REPO" ]; then
-    cd "$REPO" && git pull origin master
-else
-    git clone https://github.com/wafflespeanut/lateral-demo "$REPO"
-    cd "$REPO"
+    rm -rf "$REPO"
 fi
+
+git clone https://github.com/wafflespeanut/lateral-demo "$REPO"
+cd "$REPO"
 
 # Stop the service if it exists.
 if [ $(systemctl is-active app.service) == 'active' ]; then
@@ -44,11 +44,11 @@ fi
 
 # Cleanup existing virtualenv.
 rm -rf $API_SERVE_DIR
-cp -r $REPO/server $API_SERVE_DIR
+cp -r "$REPO"/server $API_SERVE_DIR
 python3 -m venv $API_SERVE_DIR
 source $API_SERVE_DIR/bin/activate
 # Install packages.
-pip3 install -r $API_SERVE_DIR/requirements.txt
+pip3 install -r "$REPO"/requirements.txt
 deactivate
 
 cp deploy/app.service /etc/systemd/system/
@@ -63,6 +63,6 @@ npm run build
 systemctl stop nginx
 rm -rf $NGINX_STATIC_DIR && mv build $NGINX_STATIC_DIR
 
-cp $REPO/deploy/nginx.conf   $NGINX_CONFIG_DIR/
-cp $REPO/deploy/default.conf $NGINX_CONFIG_DIR/conf.d/
+cp "$REPO"/deploy/nginx.conf   $NGINX_CONFIG_DIR/
+cp "$REPO"/deploy/default.conf $NGINX_CONFIG_DIR/conf.d/
 systemctl start nginx
