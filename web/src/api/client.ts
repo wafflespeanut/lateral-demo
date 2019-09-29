@@ -29,6 +29,7 @@ class HttpApiClient implements ApiClient {
 
     async getSimilarNews(text: string): Promise<Array<Recommendation<Date>>> {
         const response = await fetch(`${this.basePath}/recommendations`, {
+            method: 'POST',
             body: JSON.stringify({ text }),
             headers: {
                 'Content-Type': 'application/json',

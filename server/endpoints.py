@@ -6,13 +6,13 @@ from tornado.web import RequestHandler
 
 class MainHandler(RequestHandler):
     '''
-    Root handler which responds with the current time in a JSON object.
+    Root handler which responds with the current UTC datetime in a JSON object.
     '''
 
     def get(self):
-        currentTime = datetime.now()
+        currentTime = datetime.utcnow()
         self.write({
-            'message': datetime.strftime(currentTime, '%Y-%m-%d %H:%M:%S')
+            'message': datetime.strftime(currentTime, '%Y-%m-%d %H:%M:%S+0000')
         })
 
 

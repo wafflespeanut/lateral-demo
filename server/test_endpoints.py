@@ -36,8 +36,8 @@ class TestHandlers(AsyncHTTPTestCase):
         self.assertEqual(response.code, 200)
         body = response.body.decode('utf-8')
         obj = json.loads(body)
-        now = datetime.now()
-        then = datetime.strptime(obj['message'], '%Y-%m-%d %H:%M:%S')
+        now = datetime.utcnow()
+        then = datetime.strptime(obj['message'], '%Y-%m-%d %H:%M:%S+0000')
         # Verify that the seconds difference is atmost 1.
         self.assertTrue(
             now.second == then.second or now.second - then.second == 1)
