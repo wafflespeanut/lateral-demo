@@ -1,0 +1,11 @@
+[Unit]
+Description=Tornado web app for serving API.
+After=network.target
+
+[Service]
+EnvironmentFile=/root/api_env
+ExecStart=/root/app/bin/python /root/app
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

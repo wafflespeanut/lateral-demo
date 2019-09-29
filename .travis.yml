@@ -2,7 +2,9 @@
 matrix:
   include:
   - language: python
-    python: '3.7'
+    python:
+    - '3.6'
+    - '3.7'
     before_script:
     - pip install pipenv
     - pipenv install --dev
@@ -12,7 +14,9 @@ matrix:
     - flake8 . --exclude node_modules
     - python -m unittest discover
   - language: node_js
-    node_js: "12"
+    node_js:
+    - '10'
+    - '12'
     before_script:
     - cd web
     - npm install

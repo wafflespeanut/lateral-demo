@@ -7,7 +7,7 @@ import endpoints
 import os
 import sys
 
-DEFAULT_PORT = 8080
+DEFAULT_PORT = 8000
 
 
 if __name__ == "__main__":
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     client = LateralApiClient(apiKey=apiKey)
 
     app = Application(handlers=endpoints.getHandlers(apiClient=client))
-    server = HTTPServer(app)
+    server = HTTPServer(app, xheaders=True)
     port = DEFAULT_PORT
 
     try:
@@ -28,5 +28,5 @@ if __name__ == "__main__":
         pass
 
     print('Listening on port', port)
-    server.listen(port)
+    server.listen(port, address='127.0.0.1')
     IOLoop.current().start()
