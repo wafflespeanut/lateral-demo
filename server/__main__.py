@@ -17,6 +17,7 @@ if __name__ == "__main__":
     client = LateralApiClient(apiKey=apiKey)
 
     app = Application(handlers=endpoints.getHandlers(apiClient=client))
+    # Set `xheaders` so that it understands X-* headers from nginx
     server = HTTPServer(app, xheaders=True)
     port = DEFAULT_PORT
 
